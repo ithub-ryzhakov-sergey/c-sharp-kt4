@@ -10,7 +10,6 @@ public static class ReliableExecutor
     public static void Run(Action action, IReliableCleaner cleaner)
     {
         // Требуется реализация студентом.
-        // Подсказка: try { action(); } finally { cleaner.Cleanup(); }
         throw new NotImplementedException();
     }
 }

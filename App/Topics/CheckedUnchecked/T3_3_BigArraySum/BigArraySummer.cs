@@ -1,8 +1,4 @@
-using System;
-
-namespace App.Topics.CheckedUnchecked.T3_4_BigArraySum;
-
-using App.Topics.CheckedUnchecked;
+namespace App.Topics.CheckedUnchecked.T3_3_BigArraySum;
 
 // Доп. задача (*): суммировать массив в long, но промежуточные операции делать в int по стратегии
 public static class BigArraySummer

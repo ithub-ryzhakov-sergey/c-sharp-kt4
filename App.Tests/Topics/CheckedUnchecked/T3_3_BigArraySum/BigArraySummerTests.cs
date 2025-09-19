@@ -1,9 +1,7 @@
-using System;
 using App.Topics.CheckedUnchecked;
-using App.Topics.CheckedUnchecked.T3_4_BigArraySum;
-using NUnit.Framework;
+using App.Topics.CheckedUnchecked.T3_3_BigArraySum;
 
-namespace App.Tests.Topics.CheckedUnchecked.T3_4_BigArraySum;
+namespace App.Tests.Topics.CheckedUnchecked.T3_3_BigArraySum;
 
 public class BigArraySummerTests
 {
