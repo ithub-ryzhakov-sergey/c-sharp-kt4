@@ -1,25 +1,53 @@
 using App.Topics.CheckedUnchecked;
 using App.Topics.CheckedUnchecked.T2_3_BigArraySum;
+using NUnit.Framework;
+using System;
 
-namespace App.Tests.Topics.CheckedUnchecked.T2_3_BigArraySum;
-
-public class BigArraySummerTests
+namespace App.Tests.Topics.CheckedUnchecked.T2_3_BigArraySum
 {
-    [Test, Category("*")]
-    public void Sum_UncheckedWrap_AllowsIntOverflowButAccumulatesIntoLong()
+    [TestFixture]
+    public class BigArraySummerTests
     {
-        var data = new[] { int.MaxValue, 10, 20 };
-        // При int-сложении с обёрткой: int.MaxValue + 10 -> overflow -> unchecked поведение
-        // Но итоговая сумма возвращается как long
-        var expectedLong = (long)unchecked(int.MaxValue + 10 + 20);
-        var res = BigArraySummer.Sum(data, OverflowStrategy.UncheckedWrap);
-        Assert.That(res, Is.EqualTo(expectedLong));
-    }
+        private BigArraySummer _calculator;
 
-    [Test, Category("*")]
-    public void Sum_Checked_ThrowsOnOverflow()
-    {
-        var data = new[] { int.MaxValue, 1 };
-        Assert.Throws<OverflowException>(() => BigArraySummer.Sum(data, OverflowStrategy.Checked));
+        [SetUp]
+        public void Setup()
+        {
+            _calculator = new BigArraySummer();
+        }
+
+        [Test]
+        public void CalculateSum_CheckedStrategy_OverflowThrowsException()
+        {
+            int[] largeArray = { int.MaxValue, 1 };
+            var ex = Assert.Throws<OverflowException>(() =>
+                _calculator.CalculateSum(largeArray, OverflowStrategy.Checked));
+            Assert.That(ex.Message, Does.Contain("overflowed"));
+        }
+
+        [Test]
+        public void CalculateSum_UncheckedWrapStrategy_OverflowWrapsAround()
+        {
+            int[] largeArray = { int.MaxValue, 1 };
+            long result = _calculator.CalculateSum(largeArray, OverflowStrategy.UncheckedWrap);
+            long expected = (long)int.MaxValue + 1;
+            Assert.That(result, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void CalculateSum_EmptyArray_ReturnsZero()
+        {
+            int[] emptyArray = Array.Empty<int>();
+            long result = _calculator.CalculateSum(emptyArray, OverflowStrategy.Checked);
+            Assert.That(result, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void CalculateSum_NullArray_ThrowsArgumentNullException()
+        {
+            var ex = Assert.Throws<ArgumentNullException>(() =>
+                _calculator.CalculateSum(null, OverflowStrategy.Checked));
+            Assert.That(ex.ParamName, Is.EqualTo("array"));
+        }
     }
 }

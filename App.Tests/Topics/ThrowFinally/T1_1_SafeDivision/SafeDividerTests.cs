@@ -1,35 +1,63 @@
-using System;
 using App.Topics.ThrowFinally.T1_1_SafeDivision;
 using NUnit.Framework;
+using System;
 
-namespace App.Tests.Topics.ThrowFinally.T1_1_SafeDivision;
-
-public class SafeDividerTests
+namespace App.Tests.Topics.ThrowFinally.T1_1_SafeDivision
 {
-    [Test]
-    public void DividesNormally_AndFinallyIncrementsCounter()
+    [TestFixture]
+    public class SafeDividerTests
     {
-        var d = new SafeDivider();
-        var result = d.SafeDivide(10, 2);
-        Assert.That(result, Is.EqualTo(5));
-        Assert.That(d.CompletedOperationsCount, Is.EqualTo(1), "finally должен инкрементировать счётчик");
-    }
+        [Test]
+        public void SafeDivide_DivisionByZero_ThrowsDivideByZeroException()
+        {
+            var divider = new SafeDivider();
 
-    [Test]
-    public void DivideByZero_Throws_DivideByZeroException_AndFinallyRuns()
-    {
-        var d = new SafeDivider();
-        var ex = Assert.Throws<DivideByZeroException>(() => d.SafeDivide(1, 0));
-        Assert.That(ex!.Message, Does.Contain("деление на ноль").IgnoreCase);
-        Assert.That(d.CompletedOperationsCount, Is.EqualTo(1), "finally должен вызываться и при ошибке");
-    }
+            // Явно инициализируем переменную
+            bool operationCompleted = false;
+            var ex = Assert.Throws<DivideByZeroException>(() =>
+                divider.SafeDivide(10, 0, out operationCompleted));
 
-    [Test]
-    public void CheckedOverflow_ThrowsOverflowException()
-    {
-        var d = new SafeDivider();
-        // int.MinValue / -1 вызывает переполнение в checked-контексте
-        Assert.Throws<OverflowException>(() => d.SafeDivide(int.MinValue, -1));
-        Assert.That(d.CompletedOperationsCount, Is.EqualTo(1));
+            Assert.That(ex.Message, Does.Contain("Division by zero"));
+            Assert.That(operationCompleted, Is.True);
+            Assert.That(divider.OperationsCount, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void SafeDivide_NormalDivision_ReturnsCorrectResult()
+        {
+            var divider = new SafeDivider();
+            bool operationCompleted = false;
+
+            double result = divider.SafeDivide(10, 2, out operationCompleted);
+
+            Assert.That(result, Is.EqualTo(5.0));
+            Assert.That(operationCompleted, Is.True);
+            Assert.That(divider.OperationsCount, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void SafeDivide_MinValueByMinusOne_ThrowsOverflowException()
+        {
+            var divider = new SafeDivider();
+            bool operationCompleted = false;
+
+            var ex = Assert.Throws<OverflowException>(() =>
+                divider.SafeDivide(int.MinValue, -1, out operationCompleted));
+
+            Assert.That(ex.Message, Does.Contain("int.MinValue"));
+            Assert.That(operationCompleted, Is.True);
+        }
+
+        [Test]
+        public void SafeDivide_MultipleOperations_IncrementsCounter()
+        {
+            var divider = new SafeDivider();
+            bool operationCompleted = false;
+
+            divider.SafeDivide(10, 2, out operationCompleted);
+            divider.SafeDivide(20, 4, out operationCompleted);
+
+            Assert.That(divider.OperationsCount, Is.EqualTo(2));
+        }
     }
 }

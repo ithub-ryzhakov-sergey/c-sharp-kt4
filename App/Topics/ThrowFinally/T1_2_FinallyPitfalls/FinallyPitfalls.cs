@@ -1,15 +1,54 @@
-namespace App.Topics.ThrowFinally.T1_2_FinallyPitfalls;
+using System;
 
-// Дополнительная задача (*): продемонстрировать поведение finally при return
-// Ожидаемая семантика описана в тестах: значение, вычисленное до return,
-// копируется в стек вызова до выполнения finally; изменённые переменные в finally
-// не влияют на возвращаемое значение примитивного типа.
-public static class FinallyPitfalls
+namespace App.Topics.ThrowFinally.T1_2_FinallyPitfalls
 {
-    public static int ReturnWithFinallyModification(int input)
+    public class FinallyPitfalls
     {
-        // Требуется реализация студентом.
-        // Подсказка: используйте локальную переменную, меняйте её в finally, возвращайте в try.
-        throw new System.NotImplementedException();
+        public int DemonstrateFinallyWithReturn()
+        {
+            int result = 10;
+            try
+            {
+                result = 20;
+                return result;
+            }
+            finally
+            {
+                result = 30;
+            }
+        }
+
+        public int DemonstrateFinallyWithReturnAndOutParameter(out int outValue)
+        {
+            outValue = 100;
+            try
+            {
+                outValue = 200;
+                return 50;
+            }
+            finally
+            {
+                outValue = 300;
+            }
+        }
+
+        public string DemonstrateFinallyWithException()
+        {
+            string message = "initial";
+            try
+            {
+                message = "in try";
+                throw new InvalidOperationException("Test exception");
+            }
+            catch
+            {
+                message = "in catch";
+                throw;
+            }
+            finally
+            {
+                message = "in finally";
+            }
+        }
     }
 }
