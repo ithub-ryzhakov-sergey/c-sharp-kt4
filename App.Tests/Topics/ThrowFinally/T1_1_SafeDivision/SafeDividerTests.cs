@@ -28,8 +28,13 @@ public class SafeDividerTests
     public void CheckedOverflow_ThrowsOverflowException()
     {
         var d = new SafeDivider();
-        // int.MinValue / -1 вызывает переполнение в checked-контексте
+        //int.MinValue / -1 вызывает переполнение в checked-контексте
         Assert.Throws<OverflowException>(() => d.SafeDivide(int.MinValue, -1));
         Assert.That(d.CompletedOperationsCount, Is.EqualTo(1));
     }
 }
+
+
+
+
+

@@ -11,9 +11,31 @@ public class SafeDivider
     // (успешной или неуспешной). Тесты проверят, что finally отработал.
     public int CompletedOperationsCount { get; private set; }
 
-    public int SafeDivide(int a, int b)
+    public int SafeDivide(int a, int b )
     {
-        // Требуется реализация студентом.
-        throw new System.NotImplementedException();
+        try
+        {
+            if (b == 0)
+            {
+                throw new DivideByZeroException("деление на ноль");
+            }
+
+            checked
+            {
+                return a / b;
+            }
+        }
+        finally
+        {
+            CompletedOperationsCount++;
+        }
     }
 }
+
+ 
+
+
+
+
+
+
