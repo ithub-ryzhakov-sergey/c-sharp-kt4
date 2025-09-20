@@ -4,12 +4,44 @@ namespace App.Topics.CorruptedStateExceptions.T2_2_ReliabilityContracts;
 
 using App.Topics.CorruptedStateExceptions;
 
-// Задача: гарантировать вызов Cleanup() при любой ошибке, не "съедая" исключение.
 public static class ReliableExecutor
 {
     public static void Run(Action action, IReliableCleaner cleaner)
     {
-        // Требуется реализация студентом.
-        throw new NotImplementedException();
+        Exception? actionException = null;
+        try
+        {
+            action();
+        }
+        catch (Exception ex)
+        {
+            actionException = ex;
+        }
+        finally
+        {
+            Exception? cleanupException = null;
+            try
+            {
+                cleaner.Cleanup();
+            }
+            catch (Exception ex)
+            {
+                cleanupException = ex;
+            }
+
+            if (actionException != null && cleanupException != null)
+            {
+                throw new AggregateException(actionException, cleanupException);
+            }
+            else if (cleanupException != null)
+            {
+                throw cleanupException;
+            }
+        }
+
+        if (actionException != null)
+        {
+            throw actionException;
+        }
     }
 }

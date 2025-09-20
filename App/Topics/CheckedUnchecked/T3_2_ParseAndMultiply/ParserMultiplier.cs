@@ -4,10 +4,33 @@ namespace App.Topics.CheckedUnchecked.T3_2_ParseAndMultiply;
 
 public static class ParserMultiplier
 {
-    // Парсит две строки и перемножает. При useChecked=true переполнение должно приводить к OverflowException
     public static int ParseAndMultiply(string a, string b, bool useChecked)
     {
-        // Требуется реализация студентом.
-        throw new NotImplementedException();
+        // Валидация входных строк
+        if (string.IsNullOrWhiteSpace(a))
+            throw new ArgumentException("Первая строка не может быть пустой или null", nameof(a));
+
+        if (string.IsNullOrWhiteSpace(b))
+            throw new ArgumentException("Вторая строка не может быть пустой или null", nameof(b));
+
+        // Парсинг строк в числа
+        int numA = int.Parse(a);
+        int numB = int.Parse(b);
+
+        // Умножение с учетом флага useChecked
+        if (useChecked)
+        {
+            checked
+            {
+                return numA * numB;
+            }
+        }
+        else
+        {
+            unchecked
+            {
+                return numA * numB;
+            }
+        }
     }
 }

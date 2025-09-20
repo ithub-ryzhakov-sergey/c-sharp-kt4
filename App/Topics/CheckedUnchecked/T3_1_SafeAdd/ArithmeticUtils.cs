@@ -6,10 +6,35 @@ using App.Topics.CheckedUnchecked;
 
 public static class ArithmeticUtils
 {
-    // Сложение с управлением переполнением. Требуется реализовать 3 стратегии.
     public static int SafeAdd(int a, int b, OverflowStrategy strategy)
     {
-        // Требуется реализация студентом.
-        throw new NotImplementedException();
+        switch (strategy)
+        {
+            case OverflowStrategy.Checked:
+                checked
+                {
+                    return a + b;
+                }
+
+            case OverflowStrategy.UncheckedWrap:
+                unchecked
+                {
+                    return a + b;
+                }
+
+            case OverflowStrategy.Saturate:
+                long result = (long)a + b;
+
+                if (result > int.MaxValue)
+                    return int.MaxValue;
+
+                if (result < int.MinValue)
+                    return int.MinValue;
+
+                return (int)result;
+
+            default:
+                throw new ArgumentOutOfRangeException(nameof(strategy), strategy, null);
+        }
     }
 }
