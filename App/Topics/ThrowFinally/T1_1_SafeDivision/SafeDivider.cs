@@ -13,7 +13,17 @@ public class SafeDivider
 
     public int SafeDivide(int a, int b)
     {
-        // Требуется реализация студентом.
-        throw new System.NotImplementedException();
+        try
+        {
+            return a / b;
+        }
+        catch (DivideByZeroException)
+        {
+            throw new DivideByZeroException("Деление на ноль");
+        }
+        finally
+        {
+            CompletedOperationsCount++;
+        }
     }
 }
