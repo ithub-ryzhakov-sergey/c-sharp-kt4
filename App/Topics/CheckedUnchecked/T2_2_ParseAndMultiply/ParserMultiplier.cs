@@ -1,11 +1,31 @@
+using System.Linq.Expressions;
+
 namespace App.Topics.CheckedUnchecked.T2_2_ParseAndMultiply;
 
 public static class ParserMultiplier
 {
-    // Парсит две строки и перемножает. При useChecked=true переполнение должно приводить к OverflowException
     public static int ParseAndMultiply(string a, string b, bool useChecked)
     {
-        // Требуется реализация студентом.
-        throw new NotImplementedException();
+        if (string.IsNullOrWhiteSpace(a))
+            throw new ArgumentException("Ошибка");
+        if (string.IsNullOrWhiteSpace(b))
+            throw new ArgumentException("Ошибка");
+
+        int x = Convert.ToInt32(a);
+        int y = Convert.ToInt32(b);
+        if (useChecked)
+        {
+            checked
+            {
+                return x * y;
+            }
+        }
+        else
+        {
+            unchecked
+            {
+                return x * y;
+            }
+        }              
     }
 }
