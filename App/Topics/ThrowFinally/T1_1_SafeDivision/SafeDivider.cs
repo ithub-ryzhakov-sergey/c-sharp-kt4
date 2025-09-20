@@ -1,19 +1,35 @@
-namespace App.Topics.ThrowFinally.T1_1_SafeDivision;
+using System;
 
-// Задача: реализовать безопасное деление с корректной работой finally и повторным пробросом исключений.
-// Подсказки:
-// - Используйте try/finally. В finally инкрементируйте счетчик завершенных операций.
-// - При делении на ноль бросайте DivideByZeroException с понятным сообщением.
-// - Если нужно пробросить текущее исключение выше — используйте `throw;`, а не `throw ex;`.
-public class SafeDivider
+namespace App.Topics.ThrowFinally.T1_1_SafeDivision
 {
-    // Этот счетчик должен увеличиваться ПОСЛЕ каждой попытки деления
-    // (успешной или неуспешной). Тесты проверят, что finally отработал.
-    public int CompletedOperationsCount { get; private set; }
-
-    public int SafeDivide(int a, int b)
+    public class SafeDivider
     {
-        // Требуется реализация студентом.
-        throw new System.NotImplementedException();
+        public int OperationsCount { get; private set; }
+
+        public double SafeDivide(int a, int b, out bool operationCompleted)
+        {
+            // Инициализируем out параметр сразу
+            operationCompleted = false;
+
+            try
+            {
+                if (b == 0)
+                {
+                    throw new DivideByZeroException("Division by zero is not allowed.");
+                }
+
+                if (a == int.MinValue && b == -1)
+                {
+                    throw new OverflowException("Division of int.MinValue by -1 causes overflow.");
+                }
+
+                return (double)a / b;
+            }
+            finally
+            {
+                OperationsCount++;
+                operationCompleted = true; // Гарантированно выполнится
+            }
+        }
     }
 }

@@ -1,16 +1,36 @@
 using App.Topics.ThrowFinally.T1_2_FinallyPitfalls;
+using NUnit.Framework;
+using System;
 
-namespace App.Tests.Topics.ThrowFinally.T1_2_FinallyPitfalls;
-
-public class FinallyPitfallsTests
+namespace App.Tests.Topics.ThrowFinally.T1_2_FinallyPitfalls
 {
-    [Test, Category("*")]
-    public void ReturnValue_IsNotAffectedByFinallyModification()
+    [TestFixture]
+    public class FinallyPitfallsTests
     {
-        // Ожидаемое поведение: вернётся значение, вычисленное до finally
-        var result = FinallyPitfalls.ReturnWithFinallyModification(5);
-        // Тест ожидает конкретное значение, описанное в комментариях к задаче
-        // Например, если в try было return x (x=5), а в finally x++ — метод всё равно возвращает 5
-        Assert.That(result, Is.EqualTo(5));
+        [Test]
+        public void DemonstrateFinallyWithReturn_ReturnsValueFromTryNotFinally()
+        {
+            var pitfalls = new FinallyPitfalls();
+            int result = pitfalls.DemonstrateFinallyWithReturn();
+            Assert.That(result, Is.EqualTo(20));
+        }
+
+        [Test]
+        public void DemonstrateFinallyWithReturnAndOutParameter_OutParameterChangedInFinally()
+        {
+            var pitfalls = new FinallyPitfalls();
+            int result = pitfalls.DemonstrateFinallyWithReturnAndOutParameter(out int outValue);
+            Assert.That(result, Is.EqualTo(50));
+            Assert.That(outValue, Is.EqualTo(300));
+        }
+
+        [Test]
+        public void DemonstrateFinallyWithException_FinallyExecutesButExceptionPropagates()
+        {
+            var pitfalls = new FinallyPitfalls();
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+                pitfalls.DemonstrateFinallyWithException());
+            Assert.That(ex.Message, Does.Contain("Test exception"));
+        }
     }
 }

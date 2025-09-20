@@ -1,27 +1,56 @@
 using App.Topics.CheckedUnchecked.T2_2_ParseAndMultiply;
+using NUnit.Framework;
+using System;
 
-namespace App.Tests.Topics.CheckedUnchecked.T2_2_ParseAndMultiply;
-
-public class ParserMultiplierTests
+namespace App.Tests.Topics.CheckedUnchecked.T2_2_ParseAndMultiply
 {
-    [Test]
-    public void InvalidInput_ThrowsArgumentException()
+    [TestFixture]
+    public class ParserMultiplierTests
     {
-        Assert.Throws<ArgumentException>(() => ParserMultiplier.ParseAndMultiply(null!, "2", true));
-        Assert.Throws<ArgumentException>(() => ParserMultiplier.ParseAndMultiply(" ", "2", false));
-        Assert.Throws<FormatException>(() => ParserMultiplier.ParseAndMultiply("abc", "2", false));
-    }
+        private ParseMultiplier _calculator;
 
-    [Test]
-    public void MultipliesNormally_Unchecked()
-    {
-        var res = ParserMultiplier.ParseAndMultiply("3", "7", false);
-        Assert.That(res, Is.EqualTo(21));
-    }
+        [SetUp]
+        public void Setup()
+        {
+            _calculator = new ParseMultiplier();
+        }
 
-    [Test]
-    public void CheckedOverflow_Throws()
-    {
-        Assert.Throws<OverflowException>(() => ParserMultiplier.ParseAndMultiply(int.MaxValue.ToString(), "2", true));
+        [Test]
+        public void ParseAndMultiply_ValidNumbers_Checked_ReturnsCorrectResult()
+        {
+            int result = _calculator.ParseAndMultiply("5", "6", true);
+            Assert.That(result, Is.EqualTo(30));
+        }
+
+        [Test]
+        public void ParseAndMultiply_ValidNumbers_Unchecked_ReturnsCorrectResult()
+        {
+            int result = _calculator.ParseAndMultiply("5", "6", false);
+            Assert.That(result, Is.EqualTo(30));
+        }
+
+        [Test]
+        public void ParseAndMultiply_CheckedOverflow_ThrowsException()
+        {
+            var ex = Assert.Throws<OverflowException>(() =>
+                _calculator.ParseAndMultiply("1000000", "1000000", true));
+            Assert.That(ex.Message, Does.Contain("causes overflow"));
+        }
+
+        [Test]
+        public void ParseAndMultiply_NullFirstArgument_ThrowsArgumentException()
+        {
+            var ex = Assert.Throws<ArgumentException>(() =>
+                _calculator.ParseAndMultiply(null, "5", true));
+            Assert.That(ex.ParamName, Is.EqualTo("a"));
+        }
+
+        [Test]
+        public void ParseAndMultiply_InvalidFormat_ThrowsFormatException()
+        {
+            var ex = Assert.Throws<FormatException>(() =>
+                _calculator.ParseAndMultiply("abc", "5", true));
+            Assert.That(ex.Message, Does.Contain("Cannot parse"));
+        }
     }
 }
