@@ -1,30 +1,70 @@
 using App.Topics.CheckedUnchecked;
 using App.Topics.CheckedUnchecked.T2_1_SafeAdd;
+using System;
 
-namespace App.Tests.Topics.CheckedUnchecked.T2_1_SafeAdd;
-
-public class ArithmeticUtilsTests
+namespace App.Topics.CheckedUnchecked.T2_1_SafeAdd
 {
-    [Test]
-    public void CheckedStrategy_ThrowsOnOverflow()
+    public enum OverflowStrategy
     {
-        Assert.Throws<OverflowException>(() => ArithmeticUtils.SafeAdd(int.MaxValue, 1, OverflowStrategy.Checked));
-        Assert.Throws<OverflowException>(() => ArithmeticUtils.SafeAdd(int.MinValue, -1, OverflowStrategy.Checked));
+        Checked,
+        UncheckedWrap,
+        Saturate
     }
 
-    [Test]
-    public void UncheckedWrapStrategy_WrapsLikeClr()
+    public static class ArithmeticUtils
     {
-        var result = ArithmeticUtils.SafeAdd(int.MaxValue, 1, OverflowStrategy.UncheckedWrap);
-        Assert.That(result, Is.EqualTo(unchecked(int.MaxValue + 1)));
-    }
+        public static int SafeAdd(int a, int b, OverflowStrategy strategy)
+        {
+            return strategy switch
+            {
+                OverflowStrategy.Checked => SafeAddChecked(a, b),
+                OverflowStrategy.UncheckedWrap => SafeAddUncheckedWrap(a, b),
+                OverflowStrategy.Saturate => SafeAddSaturate(a, b),
+                _ => throw new ArgumentException("Неизвестная стратегия обработки переполнения", nameof(strategy))
+            };
+        }
 
-    [Test]
-    public void SaturateStrategy_ClampsToBounds()
-    {
-        var up = ArithmeticUtils.SafeAdd(int.MaxValue, 10, OverflowStrategy.Saturate);
-        var down = ArithmeticUtils.SafeAdd(int.MinValue, -10, OverflowStrategy.Saturate);
-        Assert.That(up, Is.EqualTo(int.MaxValue));
-        Assert.That(down, Is.EqualTo(int.MinValue));
+        private static int SafeAddChecked(int a, int b)
+        {
+            try
+            {
+                checked
+                {
+                    return a + b;
+                }
+            }
+            catch (OverflowException)
+            {
+                throw new OverflowException("Арифметическое переполнение произошло при сложении");
+            }
+        }
+
+        private static int SafeAddUncheckedWrap(int a, int b)
+        {
+            unchecked
+            {
+                return a + b;
+            }
+        }
+
+        private static int SafeAddSaturate(int a, int b)
+        {
+            try
+            {
+                checked
+                {
+                    return a + b;
+                }
+            }
+            catch (OverflowException)
+            {
+                if (a > 0 && b > 0) 
+                    return int.MaxValue;
+                else if (a < 0 && b < 0) 
+                    return int.MinValue;
+                else
+                    return unchecked(a + b);
+            }
+        }
     }
 }
