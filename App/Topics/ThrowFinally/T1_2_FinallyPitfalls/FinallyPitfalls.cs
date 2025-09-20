@@ -8,8 +8,14 @@ public static class FinallyPitfalls
 {
     public static int ReturnWithFinallyModification(int input)
     {
-        // Требуется реализация студентом.
-        // Подсказка: используйте локальную переменную, меняйте её в finally, возвращайте в try.
-        throw new System.NotImplementedException();
+        try
+        {
+            return input;
+        }
+
+        finally
+        {
+            input++;
+        }
     }
 }
