@@ -1,4 +1,4 @@
-namespace App.Topics.ThrowFinally.T1_4_FinallyPitfalls;
+namespace App.Topics.ThrowFinally.T1_2_FinallyPitfalls;
 
 // Дополнительная задача (*): продемонстрировать поведение finally при return
 // Ожидаемая семантика описана в тестах: значение, вычисленное до return,

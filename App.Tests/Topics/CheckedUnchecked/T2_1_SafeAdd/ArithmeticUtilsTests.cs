@@ -1,9 +1,7 @@
-using System;
 using App.Topics.CheckedUnchecked;
-using App.Topics.CheckedUnchecked.T3_1_SafeAdd;
-using NUnit.Framework;
+using App.Topics.CheckedUnchecked.T2_1_SafeAdd;
 
-namespace App.Tests.Topics.CheckedUnchecked.T3_1_SafeAdd;
+namespace App.Tests.Topics.CheckedUnchecked.T2_1_SafeAdd;
 
 public class ArithmeticUtilsTests
 {

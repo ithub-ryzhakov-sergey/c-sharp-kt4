@@ -1,8 +1,4 @@
-using System;
-
-namespace App.Topics.CheckedUnchecked.T3_1_SafeAdd;
-
-using App.Topics.CheckedUnchecked;
+namespace App.Topics.CheckedUnchecked.T2_1_SafeAdd;
 
 public static class ArithmeticUtils
 {

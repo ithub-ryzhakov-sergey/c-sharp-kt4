@@ -1,6 +1,4 @@
-using System;
-
-namespace App.Topics.CheckedUnchecked.T3_2_ParseAndMultiply;
+namespace App.Topics.CheckedUnchecked.T2_2_ParseAndMultiply;
 
 public static class ParserMultiplier
 {

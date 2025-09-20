@@ -1,8 +1,6 @@
-using System;
-using NUnit.Framework;
-using App.Topics.CheckedUnchecked.T3_2_ParseAndMultiply;
+using App.Topics.CheckedUnchecked.T2_2_ParseAndMultiply;
 
-namespace App.Tests.Topics.CheckedUnchecked.T3_2_ParseAndMultiply;
+namespace App.Tests.Topics.CheckedUnchecked.T2_2_ParseAndMultiply;
 
 public class ParserMultiplierTests
 {

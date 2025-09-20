@@ -1,7 +1,6 @@
-using NUnit.Framework;
-using App.Topics.ThrowFinally.T1_4_FinallyPitfalls;
+using App.Topics.ThrowFinally.T1_2_FinallyPitfalls;
 
-namespace App.Tests.Topics.ThrowFinally.T1_4_FinallyPitfalls;
+namespace App.Tests.Topics.ThrowFinally.T1_2_FinallyPitfalls;
 
 public class FinallyPitfallsTests
 {

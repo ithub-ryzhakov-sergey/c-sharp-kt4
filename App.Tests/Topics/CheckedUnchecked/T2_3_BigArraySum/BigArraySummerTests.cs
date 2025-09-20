@@ -1,7 +1,7 @@
 using App.Topics.CheckedUnchecked;
-using App.Topics.CheckedUnchecked.T3_3_BigArraySum;
+using App.Topics.CheckedUnchecked.T2_3_BigArraySum;
 
-namespace App.Tests.Topics.CheckedUnchecked.T3_3_BigArraySum;
+namespace App.Tests.Topics.CheckedUnchecked.T2_3_BigArraySum;
 
 public class BigArraySummerTests
 {
