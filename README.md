@@ -25,13 +25,10 @@
   /Topics
     /ThrowFinally
       /T1_1_SafeDivision
-      /T1_2_FinallyResource
-      /T1_3_RethrowAndWrapping
-      /T1_4_FinallyPitfalls (*)
+      /T1_2_FinallyPitfalls
     /CorruptedStateExceptions
       /T2_1_HandleAccessViolationInfo
       /T2_2_ReliabilityContracts
-      /T2_3_UnmanagedInteropGuard (*)
     /CheckedUnchecked
       /T3_1_SafeAdd
       /T3_2_ParseAndMultiply
@@ -57,23 +54,7 @@
   - убедитесь, что сообщение исключения не теряется при повторном броске (используйте `throw;` для повторного проброса, не `throw ex;`).
 - Крайние случаи: `int.MinValue / -1` (переполнение в checked-контексте), деление на 0, большие значения.
 
-2) T1.2_FinallyResource — ручное освобождение ресурса в `finally`
-- В классе-обёртке над псевдо-ресурсом реализуйте `Open/Use/Close` так, чтобы:
-  - `Use` бросал `InvalidOperationException`, если ресурс не открыт;
-  - `Close` вызывался гарантированно в `finally`, даже если произошла ошибка;
-  - повторный `Close` безопасен (idempotent).
-
-3) T1.3_RethrowAndWrapping — проброс и обёртка исключений
-- Метод `LoadConfig(string path)`:
-  - если `path` `null/empty/whitespace` → `ArgumentException`;
-  - при отсутствии файла оберните в `ConfigurationErrorsException` с сохранением `InnerException`:
-    - если выброшен `FileNotFoundException` — используйте его напрямую как `InnerException`;
-    - если выброшен `DirectoryNotFoundException` (например, отсутствует каталог) — для согласованности тестов оберните его в `FileNotFoundException` и используйте как `InnerException`;
-  - любые другие исключения пробросьте «как есть» через `throw;`.
-
-### (*) Дополнительно, повышенная сложность
-
-4) T1.4_FinallyPitfalls — семантика `finally` при `return` и изменении переменных
+2) T1.2_FinallyPitfalls — семантика `finally` при `return` и изменении переменных
 - Продемонстрируйте поведение: если в `try` вычислено значение и выполнен `return`, но в `finally` значение изменяется, что вернётся? Реализуется как метод с предсказуемым результатом, описанным в тестах.
 
 ---
