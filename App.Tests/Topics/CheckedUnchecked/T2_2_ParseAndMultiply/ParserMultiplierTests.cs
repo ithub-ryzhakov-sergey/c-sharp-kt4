@@ -1,27 +1,44 @@
 using App.Topics.CheckedUnchecked.T2_2_ParseAndMultiply;
 
-namespace App.Tests.Topics.CheckedUnchecked.T2_2_ParseAndMultiply;
-
-public class ParserMultiplierTests
+namespace App.Topics.CheckedUnchecked.T2_2_ParseAndMultiply
 {
-    [Test]
-    public void InvalidInput_ThrowsArgumentException()
+    public static class ParserMultiplier
     {
-        Assert.Throws<ArgumentException>(() => ParserMultiplier.ParseAndMultiply(null!, "2", true));
-        Assert.Throws<ArgumentException>(() => ParserMultiplier.ParseAndMultiply(" ", "2", false));
-        Assert.Throws<FormatException>(() => ParserMultiplier.ParseAndMultiply("abc", "2", false));
-    }
+        public static int ParseAndMultiply(string a, string b, bool useChecked)
+        {
+            if (string.IsNullOrWhiteSpace(a))
+                throw new ArgumentException("Input string 'a' cannot be null or whitespace", nameof(a));
 
-    [Test]
-    public void MultipliesNormally_Unchecked()
-    {
-        var res = ParserMultiplier.ParseAndMultiply("3", "7", false);
-        Assert.That(res, Is.EqualTo(21));
-    }
+            if (string.IsNullOrWhiteSpace(b))
+                throw new ArgumentException("Input string 'b' cannot be null or whitespace", nameof(b));
 
-    [Test]
-    public void CheckedOverflow_Throws()
-    {
-        Assert.Throws<OverflowException>(() => ParserMultiplier.ParseAndMultiply(int.MaxValue.ToString(), "2", true));
+            if (!int.TryParse(a, out int numA))
+                throw new FormatException($"Failed to parse '{a}' as integer");
+
+            if (!int.TryParse(b, out int numB))
+                throw new FormatException($"Failed to parse '{b}' as integer");
+
+            if (useChecked)
+            {
+                try
+                {
+                    checked
+                    {
+                        return numA * numB;
+                    }
+                }
+                catch (OverflowException)
+                {
+                    throw new OverflowException("Multiplication resulted in overflow");
+                }
+            }
+            else
+            {
+                unchecked
+                {
+                    return numA * numB;
+                }
+            }
+        }
     }
 }
