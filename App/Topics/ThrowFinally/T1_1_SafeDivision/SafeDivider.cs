@@ -1,19 +1,44 @@
-namespace App.Topics.ThrowFinally.T1_1_SafeDivision;
+using System;
 
-// Задача: реализовать безопасное деление с корректной работой finally и повторным пробросом исключений.
-// Подсказки:
-// - Используйте try/finally. В finally инкрементируйте счетчик завершенных операций.
-// - При делении на ноль бросайте DivideByZeroException с понятным сообщением.
-// - Если нужно пробросить текущее исключение выше — используйте `throw;`, а не `throw ex;`.
-public class SafeDivider
+namespace App.Tasks
 {
-    // Этот счетчик должен увеличиваться ПОСЛЕ каждой попытки деления
-    // (успешной или неуспешной). Тесты проверят, что finally отработал.
-    public int CompletedOperationsCount { get; private set; }
-
-    public int SafeDivide(int a, int b)
+    public static class T1_1_SafeDivision
     {
-        // Требуется реализация студентом.
-        throw new System.NotImplementedException();
+        // Счётчик завершённых операций
+        public static int OperationCompletedCount = 0;
+
+
+        public static int SafeDivide(int a, int b)
+        {
+            try
+            {
+                // Проверка деления на ноль
+                if (b == 0)
+                {
+                    throw new DivideByZeroException("Деление на ноль невозможно.");
+                }
+
+                // Выполняем деление в checked-контексте для отлова переполнения
+                checked
+                {
+                    return a / b;
+                }
+            }
+            catch (DivideByZeroException)
+            {
+                // Перебрасываем исключение без потери стека
+                throw;
+            }
+            catch (OverflowException ex)
+            {
+                // Например, int.MinValue / -1 вызывает переполнение
+                throw new OverflowException("Результат деления вызывает переполнение.", ex);
+            }
+            finally
+            {
+                // В любом случае увеличиваем счётчик завершённых операций
+                OperationCompletedCount++;
+            }
+        }
     }
 }
