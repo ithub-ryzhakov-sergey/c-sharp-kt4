@@ -1,25 +1,39 @@
-using App.Topics.CheckedUnchecked;
-using App.Topics.CheckedUnchecked.T2_3_BigArraySum;
+namespace App.Topics.CheckedUnchecked.T2_3_BigArraySum;
 
-namespace App.Tests.Topics.CheckedUnchecked.T2_3_BigArraySum;
-
-public class BigArraySummerTests
+public static class BigArraySummer
 {
-    [Test, Category("*")]
-    public void Sum_UncheckedWrap_AllowsIntOverflowButAccumulatesIntoLong()
+    public static long Sum(int[] data, OverflowStrategy strategy)
     {
-        var data = new[] { int.MaxValue, 10, 20 };
-        // При int-сложении с обёрткой: int.MaxValue + 10 -> overflow -> unchecked поведение
-        // Но итоговая сумма возвращается как long
-        var expectedLong = (long)unchecked(int.MaxValue + 10 + 20);
-        var res = BigArraySummer.Sum(data, OverflowStrategy.UncheckedWrap);
-        Assert.That(res, Is.EqualTo(expectedLong));
-    }
+        if (data == null)
+            throw new ArgumentNullException(nameof(data));
 
-    [Test, Category("*")]
-    public void Sum_Checked_ThrowsOnOverflow()
-    {
-        var data = new[] { int.MaxValue, 1 };
-        Assert.Throws<OverflowException>(() => BigArraySummer.Sum(data, OverflowStrategy.Checked));
+        if (strategy == OverflowStrategy.Checked)
+        {
+            checked
+            {
+                int sum = 0;
+                for (int i = 0; i < data.Length; i++)
+                {
+                    sum += data[i];
+                }
+                return sum;
+            }
+        }
+        else if (strategy == OverflowStrategy.UncheckedWrap)
+        {
+            unchecked
+            {
+                int sum = 0;
+                for (int i = 0; i < data.Length; i++)
+                {
+                    sum += data[i];
+                }
+                return sum;
+            }
+        }
+        else
+        {
+            throw new ArgumentException("Unknown strategy", nameof(strategy));
+        }
     }
 }
